@@ -17,11 +17,14 @@ import {
 } from "@/components/ui/tabs"
 import { useContext, useState } from "react"
 import { AuthContext } from "../../contexts/auth"
+import { LogIn, LockIcon } from "lucide-react"
+import { Mail } from "lucide-react"
+import { Oval } from 'svg-loaders-react';
 
 
 
 function SignIn() {
-  const { signInWithEmail } = useContext(AuthContext);
+  const { signInWithEmail, loadingAuth } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -51,18 +54,29 @@ function SignIn() {
                 Faça login e entre na plataforma.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="space-y-1">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="name">Senha</Label>
-                <Input id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-              </div>
+            <CardContent>
+              <form className="space-y-2">
+                <div className="space-y-1">
+                  <Label htmlFor="email" className="flex-row flex">
+                    <Mail className="w-4 h-4 mr-1" />
+                    Email
+                  </Label>
+                  <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="name" className="flex-row flex">
+                    <LockIcon className="w-4 h-4 mr-1" />
+                    Senha
+                  </Label>
+                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                </div>
+              </form>
             </CardContent>
             <CardFooter>
-              <Button onClick={e => Login(e)}>Logar</Button>
+              <Button variant="default" onClick={e => Login(e)}>
+                Logar
+                {loadingAuth ? <Oval className=" w-4 h-4 ml-2" /> : <LogIn className="w-4 h-4 ml-2" />}
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -94,7 +108,7 @@ function SignIn() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </div >
   )
 }
 

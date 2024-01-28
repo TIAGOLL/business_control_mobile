@@ -38,18 +38,16 @@ function AuthProvider({ children }) {
 
   async function signInWithEmail(email, password) {
     setLoadingAuth(true);
-
     await signInWithEmailAndPassword(auth, email, password)
       .then(async (value) => {
         console.log(value)
         let uid = value.user.uid;
-
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef)
 
         let data = {
           uid: uid,
-          name: docSnap.data().nome.split(' ')[0],
+          name: docSnap.data().nome,
           email: value.user.email,
           avatarUrl: docSnap.data().avatarUrl
         }
@@ -57,7 +55,7 @@ function AuthProvider({ children }) {
         setUser(data);
         storageUser(data);
         setLoadingAuth(false);
-        navigate("/dashboard")
+        navigate("/service")
         toast.success('Bem vindo de volta!')
       })
       .catch((error) => {
