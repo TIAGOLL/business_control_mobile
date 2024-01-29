@@ -15,6 +15,13 @@ const api = {
       );
       return result.data.products;
     },
+
+    async GetInTransit() {
+      const result = await axios.get(
+        `${import.meta.env.VITE_REACT_BASE_API_URL}/api/products/load/intransit`
+      );
+      return result.data.products;
+    },
   },
 };
 
