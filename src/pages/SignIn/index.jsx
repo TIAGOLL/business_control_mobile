@@ -20,17 +20,25 @@ import { AuthContext } from "../../contexts/auth"
 import { LogIn, LockIcon } from "lucide-react"
 import { Mail } from "lucide-react"
 import { Oval } from 'svg-loaders-react';
+import { LoaderIcon } from "lucide-react"
+import { ShieldQuestion } from "lucide-react"
+import { UserCheck } from "lucide-react"
 
 
 
 function SignIn() {
-  const { signInWithEmail, loadingAuth } = useContext(AuthContext);
+  const { signInWithEmail, loadingAuth, signInAnonymous } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   async function Login(e) {
     e.preventDefault();
     await signInWithEmail(email, password)
+  }
+
+  async function loginAnonymous(e) {
+    e.preventDefault();
+    await signInAnonymous();
   }
 
   function ChangePassword(e) {
@@ -75,7 +83,7 @@ function SignIn() {
             <CardFooter>
               <Button variant="default" onClick={e => Login(e)}>
                 Logar
-                {loadingAuth ? <Oval className=" w-4 h-4 ml-2" /> : <LogIn className="w-4 h-4 ml-2" />}
+                {loadingAuth ? <LoaderIcon className=" w-4 h-4 ml-2 animate-spin" /> : <LogIn className="w-4 h-4 ml-2" />}
               </Button>
             </CardFooter>
           </Card>
@@ -107,6 +115,13 @@ function SignIn() {
             </CardFooter>
           </Card>
         </TabsContent>
+        <div className="mt-5 space-y-2">
+          <Label>Se você for um cliente, clique no botão abaixo:</Label>
+          <Button onClick={e => loginAnonymous(e)} variant="outline" className="w-full bg-blue-200">
+            <UserCheck className="w-4 h-4 mr-2" />
+            Logar como cliente
+          </Button>
+        </div>
       </Tabs>
     </div >
   )

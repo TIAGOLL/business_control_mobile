@@ -11,7 +11,7 @@ function ProductCardInTransit(props) {
   return (
     props.prod_requests?.map((item) => {
       return (
-        <Card className="w-[45vw] m-1">
+        <Card className="w-[45vw] m-1 lg:w-2/12 md:w-2/12 lg:h-[400px]">
           <CardHeader>
             <CardTitle>{item.products.name}</CardTitle>
           </CardHeader>
@@ -32,7 +32,7 @@ function ProductCardInTransit(props) {
 function ProductCard(props) {
 
   return (
-    <Card className="w-[45vw] m-1">
+    <Card className="w-[45vw] m-1 lg:w-2/12 lg:h-[400px]">
       <CardHeader>
         <CardTitle>{props.name}</CardTitle>
       </CardHeader>

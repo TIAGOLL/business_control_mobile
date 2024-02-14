@@ -1,6 +1,6 @@
 import { useState, createContext, useEffect } from 'react';
 import { auth, db } from '../services/auth';
-import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth'
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, getAuth, signInAnonymously } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 import { useNavigate } from 'react-router-dom'
@@ -32,8 +32,6 @@ function AuthProvider({ children }) {
 
     loadUser();
   }, [])
-
-
 
 
   async function signInWithEmail(email, password) {
@@ -80,33 +78,21 @@ function AuthProvider({ children }) {
       })
   }
 
-
-  async function signInWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    let result = await signInWithPopup(auth, provider)
-      .then(async (value) => {
-        let data = {
-          uid: value.user.uid,
-          name: value.user.displayName.split(' ')[0],
-          avatarUrl: value.user.photoURL,
-        }
-
-        setUser(data);
-        storageUser(data);
-        setLoadingAuth(false);
-        navigate("/dashboard")
-        toast.success('Bem vindo de volta!')
+  async function signInAnonymous() {
+    const auth = getAuth();
+    console.log(auth)
+    signInAnonymously(auth)
+      .then(() => {
+        toast.success('Bem vindo!')
+        navigate("/service")
       })
       .catch((error) => {
-        console.log(error);
-        setLoadingAuth(false);
-        if (error.code === 'auth/too-many-requests') {
-          toast.error('Muitas tentativas, tente novamente mais tarde!')
-          return
-        }
-      })
-  }
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log({ errorCode, errorMessage })
+      });
 
+  }
   // Cadastrar um novo user
   async function signUp(email, password, name) {
     setLoadingAuth(true);
@@ -160,14 +146,14 @@ function AuthProvider({ children }) {
       value={{
         signed: !!user,
         user,
-        signInWithGoogle,
         signInWithEmail,
         signUp,
         logout,
         loadingAuth,
         loading,
         storageUser,
-        setUser
+        setUser,
+        signInAnonymous
       }}
     >
       {children}
