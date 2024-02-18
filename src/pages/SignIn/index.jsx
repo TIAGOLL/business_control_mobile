@@ -9,21 +9,13 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger, } from "@/components/ui/tabs"
 import { useContext, useState } from "react"
 import { AuthContext } from "../../contexts/auth"
 import { LogIn, LockIcon } from "lucide-react"
 import { Mail } from "lucide-react"
-import { Oval } from 'svg-loaders-react';
 import { LoaderIcon } from "lucide-react"
-import { ShieldQuestion } from "lucide-react"
 import { UserCheck } from "lucide-react"
-
 
 
 function SignIn() {

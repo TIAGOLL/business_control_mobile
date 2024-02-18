@@ -1,6 +1,6 @@
 import { useState, createContext, useEffect } from 'react';
 import { auth, db } from '../services/auth';
-import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, getAuth, signInAnonymously } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut, getAuth, signInAnonymously } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 import { useNavigate } from 'react-router-dom'
@@ -38,7 +38,6 @@ function AuthProvider({ children }) {
     setLoadingAuth(true);
     await signInWithEmailAndPassword(auth, email, password)
       .then(async (value) => {
-        console.log(value)
         let uid = value.user.uid;
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef)
@@ -79,10 +78,16 @@ function AuthProvider({ children }) {
   }
 
   async function signInAnonymous() {
+    setLoadingAuth(true);
     const auth = getAuth();
-    console.log(auth)
     signInAnonymously(auth)
-      .then(() => {
+      .then((value) => {
+        let data = {
+          uid: value.user.uid,
+        }
+        console.log(data)
+        storageUser(data);
+        setUser(data);
         toast.success('Bem vindo!')
         navigate("/service")
       })
@@ -90,8 +95,10 @@ function AuthProvider({ children }) {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log({ errorCode, errorMessage })
-      });
-
+      })
+      .finally(() => {
+        setLoadingAuth(false)
+      })
   }
   // Cadastrar um novo user
   async function signUp(email, password, name) {
